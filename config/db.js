@@ -14,7 +14,25 @@ const closePool = () => {
   pool.end();
 };
 
-const query = (queryText, params, callback) => {
+async function query(q, params) {
+  const client = await pool.connect();
+  let res;
+  try {
+    await client.query("BEGIN");
+    try {
+      res = await client.query(q, params);
+      await client.query("COMMIT");
+    } catch (err) {
+      await client.query("ROLLBACK");
+      throw err;
+    }
+  } finally {
+    client.release();
+  }
+  return res;
+}
+
+const syncQuery = (queryText, params, callback) => {
   const start = Date.now();
   return pool.query(queryText, params, (err, res) => {
     const duration = Date.now() - start;
@@ -25,6 +43,7 @@ const query = (queryText, params, callback) => {
 
 module.exports = {
   query,
+  syncQuery,
   initPool,
   closePool
 };
