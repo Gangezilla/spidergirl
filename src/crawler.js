@@ -1,43 +1,77 @@
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+const parseUri = require("./parseUri");
 
 const db = require("../config/db");
-const query =
-  'INSERT INTO urls(path, host, scheme, content, "dateLastCrawled", "queryString") VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
-const generateValues = (path, host, scheme, content, queryString) => {
-  [path, host, scheme, content, new Date().toISOString(), queryString];
+const logger = require("../config/logger");
+
+const newUrlQuery =
+  'INSERT INTO urls(path, host, scheme, "queryString") VALUES($1, $2, $3, $4) RETURNING *';
+const generateValuesForNewUrl = (path, host, scheme, queryString) => [
+  path,
+  host,
+  scheme,
+  queryString
+];
+
+const getUncrawledUrls = 'SELECT * FROM urls WHERE "dateLastCrawled" IS NULL';
+const generateCompleteUrlFromRow = row =>
+  `${row.scheme}://${row.host}${row.path}${row.queryString}`;
+
+const updateUrl =
+  'UPDATE urls SET content=($1), "dateLastCrawled"=($2) WHERE id=($3)';
+const generateValuesForUpdateUrl = (content, id) => [
+  content,
+  new Date().toISOString(),
+  id
+];
+
+const getNewLinksFromContent = (resolvedLink, content) => {
+  $ = cheerio.load(content);
+  const links = [];
+  $("a").map((i, link) => {
+    let href = $(link).attr("href");
+    if (href) {
+      if (!href.includes("http")) {
+        const { protocol, host } = parseUri(resolvedLink);
+        href = `${protocol}://${host}${href}`;
+      }
+      links.push(href);
+    }
+  });
+  return links;
 };
 
 const beginCrawling = async () => {
-  const resp = await fetch("http://dmoz-odp.org/");
-  const text = await resp.text();
-  const cleanText = text.replace(/\s/g, "");
+  const res = await db.query(getUncrawledUrls);
+  const links = res.rows.map(row => ({
+    url: generateCompleteUrlFromRow(row),
+    id: row.id
+  }));
+  links.forEach(async link => {
+    try {
+      const resp = await fetch(link.url);
+      const text = await resp.text();
+      const content = text.replace(/\r?\n|\r/g, "");
+      const updateValues = generateValuesForUpdateUrl(content, link.id);
+      const updateRes = await db.query(updateUrl, updateValues);
 
-  // const query =
-  //   "UPDATE urls SET content=($1), dateLastCrawled=($2) WHERE id=2";
-  // const values = [text, Date.now()];
-  // console.log(text, "!!!!!!!!!!!");
-  // const values = generateValues();
-  const response = await db.query(query, values);
-  // console.log(response);
-  // console.log(text);
-  $ = cheerio.load(text);
-  $("a").each((i, link) => {
-    // console.log($(link).text(), "text");
-    // console.log($(link).attr("href"), "link!");
+      const newLinks = getNewLinksFromContent(link.url, content);
+      newLinks.forEach(async newLink => {
+        const { path, host, protocol, query } = parseUri(newLink);
+        const newUrlValues = generateValuesForNewUrl(
+          path,
+          host,
+          protocol,
+          query
+        );
+        const newRes = await db.query(newUrlQuery, newUrlValues);
+      });
+    } catch (err) {
+      logger.error(err);
+      // do something clever here when you get around to it;
+    }
   });
-
-  // do a fetch to reddit...
-  //...
-  // insert into id = 1
 };
 
 module.exports = beginCrawling;
-
-// take a URL
-// do a request to that URL
-// get the HTML of that URL
-// put html in DB
-// parse the HTML for any anchor tags
-// put them into a DB
-// go again

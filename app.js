@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+const cron = require("node-cron");
 
 const routes = require("./routes");
 const logger = require("./config/logger");
@@ -30,7 +31,10 @@ app.use(
 app.use("/", routes);
 
 initPool();
-beginCrawling();
+cron.schedule("0 * * * *", () => {
+  logger.info("Beginning crawling task");
+  beginCrawling();
+});
 logger.info("App has been initialised.");
 
 app.listen(PORT, () => {

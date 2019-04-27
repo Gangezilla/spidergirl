@@ -17,6 +17,7 @@
     "jsonfile": "^5.0.0",
     "natural": "^0.6.3",
     "next": "^8.0.3",
+    "node-cron": "^2.0.3",
     "node-fetch": "^2.3.0",
     "node-pg-migrate": "^3.18.1",
     "pg": "^7.10.0",
