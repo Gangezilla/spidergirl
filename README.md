@@ -14,4 +14,3 @@
 # Tokenizer
 
 - Pretty dumb atm, not taking into consideration semantics, or h1 h2 etc. but it's ok for now :)
-- need to create a list of stop words and filter those out

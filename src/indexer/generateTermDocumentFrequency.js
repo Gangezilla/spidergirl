@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 const Tokenizer = require('html-tokenizer');
+const stopWords = require('../../stopWords');
 
 const normaliseText = text => text.toLowerCase().replace(/[.,/#!?$%^&*;:[\]{}=<>\-_`~()"']/gm, '');
 
@@ -16,6 +17,16 @@ const calculateTokenFrequency = (tokens) => {
   return sortedTokens;
 };
 
+const removeStopWords = (token) => {
+  let isAllowed = true;
+  stopWords.forEach((stopWord) => {
+    if (token === stopWord) {
+      isAllowed = false;
+    }
+  });
+  return isAllowed;
+};
+
 const generateTermDocumentFrequency = (content) => {
   const dirtyText = [];
   const tokens = Tokenizer.tokenize(content);
@@ -25,11 +36,10 @@ const generateTermDocumentFrequency = (content) => {
       dirtyText.push(text.trim());
     }
   }
-  const dirtyTokens = dirtyText
-    .filter(Boolean)
-    .join(' ')
-    .split(' ');
-  const normalisedTokens = dirtyTokens.map(token => normaliseText(token));
+  const dirtyTokens = dirtyText.join(' ').split(' ');
+  const normalisedTokens = dirtyTokens.map(token => normaliseText(token)).filter(removeStopWords);
+  // TODO: removing stopwords is mad slow, and will only get slower with more stopwords.
+
   return calculateTokenFrequency(normalisedTokens);
 };
 

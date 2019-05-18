@@ -64,5 +64,5 @@ module.exports = startIndexing;
 // in the future, check whether the rows on the table have been updated since our last time indexing
 // if it has, reindex it, otherwise just leave it for now :)
 
-// later, generate postings list and inverted index from each of these files.
+// later and inverted index from each of these files.
 // but yea might be more efficient to do it in one go. but we'll see :)

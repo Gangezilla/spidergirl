@@ -2,8 +2,8 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const parseUri = require('./parseUri');
 
-const db = require('../config/db');
-const logger = require('../config/logger');
+const db = require('../../config/db');
+const logger = require('../../config/logger');
 
 const newUrlQuery = 'INSERT INTO urls(path, host, scheme, "queryString") VALUES($1, $2, $3, $4) RETURNING *';
 const generateValuesForNewUrl = (path, host, scheme, queryString) => [

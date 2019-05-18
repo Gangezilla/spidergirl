@@ -1,0 +1,16 @@
+module.exports = [
+  'html',
+  'doctype',
+  'a',
+  'at',
+  'and',
+  'at',
+  'an',
+  'http',
+  'https',
+  'is',
+  'h',
+  'of',
+  'on',
+  '',
+];
