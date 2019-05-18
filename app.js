@@ -8,6 +8,7 @@ const routes = require("./routes");
 const logger = require("./config/logger");
 const { initPool } = require("./config/db");
 const beginCrawling = require("./src/crawler");
+const startIndexer = require('./src/indexer')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,4 +40,5 @@ logger.info("App has been initialised.");
 
 app.listen(PORT, () => {
   logger.info(`Listening on port ${PORT}`);
+  startIndexer();
 });
