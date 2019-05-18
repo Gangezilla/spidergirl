@@ -3,5 +3,29 @@
   "content": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL /World/Ossetian/Рæстæгæрвыст was not found on this server.</p><hr><address>Apache/2.4.18 (Ubuntu) Server at www.dmoz-odp.org Port 80</address></body></html>",
   "url": "http://www.dmoz-odp.org/World/Ossetian/%D0%A0%C3%A6%D1%81%D1%82%C3%A6%D0%B3%C3%A6%D1%80%D0%B2%D1%8B%D1%81%D1%82",
   "dateCreated": "2019-04-26T14:55:03.250Z",
-  "dateUpdated": "2019-04-26T16:00:06.415Z"
+  "dateUpdated": "2019-04-26T16:00:06.415Z",
+  "termDocumentFrequency": {
+    "20enhtmlheadtitle404": 1,
+    "80addressbodyhtml": 1,
+    "at": 1,
+    "doctyp": 1,
+    "found": 1,
+    "foundh1pth": 1,
+    "foundtitleheadbodyh1not": 1,
+    "html": 2,
+    "ietfdtd": 1,
+    "not": 2,
+    "on": 1,
+    "port": 1,
+    "public": 1,
+    "request": 1,
+    "server": 1,
+    "serverphraddressapache2418": 1,
+    "thi": 1,
+    "ubuntu": 1,
+    "url": 1,
+    "wa": 1,
+    "worldossetianрæстæгæрвыст": 1,
+    "wwwdmozodporg": 1
+  }
 }

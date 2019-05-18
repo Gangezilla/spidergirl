@@ -68,7 +68,7 @@ const beginCrawling = async () => {
         const newRes = await db.query(newUrlQuery, newUrlValues);
       });
     } catch (err) {
-      logger.error(err);
+      logger.error({ message: err });
       // do something clever here when you get around to it;
     }
   });
