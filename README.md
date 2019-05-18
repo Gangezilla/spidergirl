@@ -7,3 +7,6 @@
 - when we create that doc, update the postings list. update the inverted index.
 
 - set up what we fields we want to idnex, and what types
+- so we need our schema to index according to. define that, then if its a number we can coerce to a number. or if its a URL we can combine fields.
+
+- gotta figure out how to do ranking as well :)
