@@ -16,7 +16,7 @@ const startIndexing = async () => {
     // const numberOfEntries = await db
     //   .query(getTotalItemsQuery)
     //   .then(data => data.rows[0].count);
-    const numberOfEntries = 20;
+    const numberOfEntries = 1;
     let count = 0;
     let page = 1;
     while (count < numberOfEntries) {

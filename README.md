@@ -10,3 +10,8 @@
 - so we need our schema to index according to. define that, then if its a number we can coerce to a number. or if its a URL we can combine fields.
 
 - gotta figure out how to do ranking as well :)
+
+# Tokenizer
+
+- Pretty dumb atm, not taking into consideration semantics, or h1 h2 etc. but it's ok for now :)
+- need to create a list of stop words and filter those out

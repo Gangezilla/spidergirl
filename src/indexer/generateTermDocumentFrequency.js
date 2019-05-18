@@ -1,8 +1,7 @@
-const { stemmer } = require('porter-port');
+/* eslint-disable no-restricted-syntax */
+const Tokenizer = require('html-tokenizer');
 
 const normaliseText = text => text.toLowerCase().replace(/[.,/#!?$%^&*;:[\]{}=<>\-_`~()"']/gm, '');
-
-const tokeniseText = text => text.split(' ');
 
 const calculateTokenFrequency = (tokens) => {
   const unsortedTokens = tokens.reduce((count, word) => {
@@ -18,13 +17,20 @@ const calculateTokenFrequency = (tokens) => {
 };
 
 const generateTermDocumentFrequency = (content) => {
-  // i get the feeling this won't work as well for HTML, so probably have to come back.
-  // yeah, the index it generates looks pretty fucked up. defs have to revisit.
-  const normalisedContent = normaliseText(content);
-  const tokenisedContent = tokeniseText(normalisedContent);
-  const stemmedContent = tokenisedContent.map(word => stemmer(word));
-  const termDocFrequency = calculateTokenFrequency(stemmedContent);
-  return termDocFrequency;
+  const dirtyText = [];
+  const tokens = Tokenizer.tokenize(content);
+  for (const token of tokens) {
+    const { type, text } = token;
+    if (type === 'text') {
+      dirtyText.push(text.trim());
+    }
+  }
+  const dirtyTokens = dirtyText
+    .filter(Boolean)
+    .join(' ')
+    .split(' ');
+  const normalisedTokens = dirtyTokens.map(token => normaliseText(token));
+  return calculateTokenFrequency(normalisedTokens);
 };
 
 module.exports = generateTermDocumentFrequency;
