@@ -4,6 +4,7 @@ const jsonFile = require('jsonfile');
 const db = require('../../config/db');
 const logger = require('../../config/logger');
 const generateTermDocumentFrequency = require('./generateTermDocumentFrequency');
+const updateInvertedIndex = require('./updateInvertedIndex');
 
 const getAllEntriesQuery = (itemsPerPage, page) => `SELECT * FROM urls LIMIT ${itemsPerPage} OFFSET ${(page - 1) * itemsPerPage}  `;
 
@@ -23,7 +24,8 @@ const startIndexing = async () => {
       const query = getAllEntriesQuery(itemsPerPage, page);
       const data = await db.query(query); // eslint-disable-line
       const { rows } = data;
-      rows.forEach((row) => {
+      // eslint-disable-next-line no-loop-func
+      rows.forEach(async (row) => {
         const {
           id,
           content,
@@ -43,7 +45,7 @@ const startIndexing = async () => {
           dateUpdated: dateLastCrawled,
           termDocumentFrequency,
         };
-        // await updateInvertedIndex(newDoc);
+        updateInvertedIndex(newDoc);
         const filePath = nodePath.join(`${__dirname}/../../documents/${id}.json`);
         // todo, upload this file to s3
         jsonFile.writeFile(filePath, newDoc, {
@@ -54,6 +56,7 @@ const startIndexing = async () => {
       count += itemsPerPage;
     }
     logger.info('Completed indexing');
+    // await uploadInvertedIndex() // have a logger statement in here too
   } catch (err) {
     logger.error({ message: err });
   }

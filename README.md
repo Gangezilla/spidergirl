@@ -14,3 +14,6 @@
 # Tokenizer
 
 - Pretty dumb atm, not taking into consideration semantics, or h1 h2 etc. but it's ok for now :)
+
+* Put docs into S3 bucket
+* Generate inverted index
