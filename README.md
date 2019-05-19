@@ -15,5 +15,5 @@
 
 - Pretty dumb atm, not taking into consideration semantics, or h1 h2 etc. but it's ok for now :)
 
-* Put docs into S3 bucket
-* Generate inverted index
+* Put docs into mongo, or similar document storage.
+* Generate inverted index, maybe store this in a db. i think having it on disk isn't the best idea.
